@@ -1,0 +1,6 @@
+apiVersion: v2
+name: team-hub
+description: Team Hub — communication, decision, and task management for CDS Platform
+version: 0.1.0
+appVersion: "0.1.0"
+type: application

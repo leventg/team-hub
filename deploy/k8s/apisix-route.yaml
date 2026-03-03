@@ -1,0 +1,75 @@
+apiVersion: apisix.apache.org/v2
+kind: ApisixRoute
+metadata:
+  name: team-hub-route
+spec:
+  http:
+    - name: team-hub-api
+      match:
+        hosts:
+          - team-hub.chona-telco.local
+        paths:
+          - /team-hub/api/*
+      backends:
+        - serviceName: team-hub
+          servicePort: 3001
+      plugins:
+        - name: cors
+          enable: true
+          config:
+            allow_origins: "*"
+            allow_methods: "GET,POST,PUT,PATCH,DELETE,OPTIONS"
+            allow_headers: "Authorization,Content-Type,X-API-Key,X-Trace-Id,mcp-session-id"
+            allow_credential: true
+        - name: limit-req
+          enable: true
+          config:
+            rate: 100
+            burst: 50
+            key_type: var
+            key: remote_addr
+            rejected_code: 429
+
+    - name: team-hub-mcp
+      match:
+        hosts:
+          - team-hub.chona-telco.local
+        paths:
+          - /team-hub/api/v1/mcp
+      backends:
+        - serviceName: team-hub
+          servicePort: 3001
+      plugins:
+        - name: limit-req
+          enable: true
+          config:
+            rate: 50
+            burst: 20
+            key_type: var_combination
+            key: remote_addr
+            rejected_code: 429
+
+    - name: team-hub-websocket
+      match:
+        hosts:
+          - team-hub.chona-telco.local
+        paths:
+          - /socket.io/*
+      backends:
+        - serviceName: team-hub
+          servicePort: 3001
+      plugins:
+        - name: proxy-rewrite
+          enable: true
+          config:
+            websocket: true
+
+    - name: team-hub-web
+      match:
+        hosts:
+          - team-hub.chona-telco.local
+        paths:
+          - /*
+      backends:
+        - serviceName: team-hub
+          servicePort: 3001

@@ -1,0 +1,74 @@
+{
+  "realm": "team-hub",
+  "enabled": true,
+  "registrationAllowed": false,
+  "loginWithEmailAllowed": true,
+  "duplicateEmailsAllowed": false,
+  "roles": {
+    "realm": [
+      { "name": "admin", "description": "Full system administrator" },
+      { "name": "architect", "description": "Architecture decisions and oversight" },
+      { "name": "engineer", "description": "Implementation and development" },
+      { "name": "junior", "description": "Junior developer with guided access" }
+    ]
+  },
+  "clients": [
+    {
+      "clientId": "team-hub-api",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": false,
+      "bearerOnly": true,
+      "standardFlowEnabled": false,
+      "directAccessGrantsEnabled": true
+    },
+    {
+      "clientId": "team-hub-web",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": true,
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": true,
+      "rootUrl": "http://localhost:3000",
+      "baseUrl": "/",
+      "redirectUris": [
+        "http://localhost:3000/*"
+      ],
+      "webOrigins": [
+        "http://localhost:3000"
+      ]
+    }
+  ],
+  "users": [
+    {
+      "username": "levent",
+      "email": "levent@cds-platform.dev",
+      "enabled": true,
+      "firstName": "Levent",
+      "lastName": "Admin",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "levent123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": ["admin"]
+    },
+    {
+      "username": "junior",
+      "email": "junior@cds-platform.dev",
+      "enabled": true,
+      "firstName": "Junior",
+      "lastName": "Developer",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "junior123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": ["junior"]
+    }
+  ]
+}

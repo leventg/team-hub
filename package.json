@@ -1,0 +1,25 @@
+{
+  "name": "team-hub",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Team Hub — communication, decision, and task management platform for CDS",
+  "workspaces": [
+    "apps/api",
+    "apps/web"
+  ],
+  "scripts": {
+    "dev:api": "npm run dev -w apps/api",
+    "dev:web": "npm run dev -w apps/web",
+    "build:api": "npm run build -w apps/api",
+    "build:web": "npm run build -w apps/web",
+    "build": "npm run build -w apps/api && npm run build -w apps/web",
+    "lint": "npm run lint -w apps/api && npm run lint -w apps/web",
+    "test": "npm run test -w apps/api",
+    "migration:generate": "npm run migration:generate -w apps/api",
+    "migration:run": "npm run migration:run -w apps/api",
+    "migration:revert": "npm run migration:revert -w apps/api"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

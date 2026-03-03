@@ -1,0 +1,51 @@
+replicaCount: 1
+
+image:
+  repository: registry.chona-telco.local/team-hub
+  tag: "0.1.0"
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 3001
+
+ingress:
+  enabled: true
+  className: apisix
+  host: team-hub.chona-telco.local
+  tls: false
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+env:
+  NODE_ENV: production
+  PORT: "3001"
+  DB_HOST: postgresql.database.svc.cluster.local
+  DB_PORT: "5432"
+  DB_NAME: team_hub
+  DB_SCHEMA: team_hub
+  REDIS_HOST: redis.cache.svc.cluster.local
+  REDIS_PORT: "6379"
+  KEYCLOAK_URL: https://keycloak.chona-telco.local
+  KEYCLOAK_REALM: team-hub
+  KEYCLOAK_CLIENT_ID: team-hub-api
+
+secrets:
+  DB_USER: team_hub
+  DB_PASSWORD: ""
+  KEYCLOAK_CLIENT_SECRET: ""
+
+postgresql:
+  enabled: false  # Use existing cluster PostgreSQL
+
+redis:
+  enabled: false  # Use existing cluster Redis
+
+keycloak:
+  enabled: false  # Use existing cluster Keycloak
