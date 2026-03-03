@@ -3,16 +3,16 @@ services:
     image: postgres:17-alpine
     container_name: team-hub-postgres
     environment:
-      POSTGRES_USER: team_hub
-      POSTGRES_PASSWORD: team_hub_pass
-      POSTGRES_DB: team_hub
+      POSTGRES_USER: ${DB_USER:-team_hub}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?Set DB_PASSWORD in .env}
+      POSTGRES_DB: ${DB_NAME:-team_hub}
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./migrations/V001__initial_schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U team_hub"]
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-team_hub}"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -36,8 +36,8 @@ services:
     command: start-dev --import-realm
     environment:
       KC_DB: dev-mem
-      KEYCLOAK_ADMIN: admin
-      KEYCLOAK_ADMIN_PASSWORD: admin
+      KEYCLOAK_ADMIN: ${KC_ADMIN:-admin}
+      KEYCLOAK_ADMIN_PASSWORD: ${KC_ADMIN_PASSWORD:?Set KC_ADMIN_PASSWORD in .env}
     ports:
       - "8080:8080"
     volumes:

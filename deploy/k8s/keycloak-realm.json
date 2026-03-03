@@ -49,8 +49,8 @@
       "credentials": [
         {
           "type": "password",
-          "value": "levent123",
-          "temporary": false
+          "value": "changeme",
+          "temporary": true
         }
       ],
       "realmRoles": ["admin"]
@@ -64,8 +64,8 @@
       "credentials": [
         {
           "type": "password",
-          "value": "junior123",
-          "temporary": false
+          "value": "changeme",
+          "temporary": true
         }
       ],
       "realmRoles": ["junior"]

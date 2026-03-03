@@ -8,14 +8,16 @@ VALUES
     ('Junior', 'junior@cds-platform.dev', 'HUMAN', 'JUNIOR', 'system')
 ON CONFLICT (email) DO NOTHING;
 
--- AI agents (api_key_hash generated from: thub_mimar_dev_key_2026 and thub_muhendis_dev_key_2026)
--- In production, generate proper keys via POST /users/:id/api-key
+-- AI agents — API keys are passed as env vars: MIMAR_API_KEY, MUHENDIS_API_KEY
+-- Generate keys via: POST /team-hub/api/v1/users/:id/api-key (requires ADMIN)
+-- Or run this with psql -v to inject keys:
+--   psql -v mimar_key="'your_key'" -v muhendis_key="'your_key'" -f seed-users.sql
 INSERT INTO team_hub.users (display_name, user_type, role, api_key_hash, created_by)
 VALUES
     ('Mimar', 'AI_AGENT', 'ARCHITECT',
-     encode(sha256('thub_mimar_dev_key_2026'::bytea), 'hex'), 'system'),
+     encode(sha256(coalesce(:'mimar_key', 'CHANGE_ME')::bytea), 'hex'), 'system'),
     ('Muhendis', 'AI_AGENT', 'ENGINEER',
-     encode(sha256('thub_muhendis_dev_key_2026'::bytea), 'hex'), 'system')
+     encode(sha256(coalesce(:'muhendis_key', 'CHANGE_ME')::bytea), 'hex'), 'system')
 ON CONFLICT DO NOTHING;
 
 -- Add all users to default channels
