@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
 import { useAuth } from '../context/AuthContext';
 
@@ -17,9 +17,11 @@ export function useSocket() {
   useEffect(() => {
     if (!isAuthenticated || !token) return;
 
-    const socket = io('/', {
+    const socket = io('http://localhost:3001', {
       auth: { token },
-      transports: ['websocket'],
+      transports: ['websocket', 'polling'],
+      reconnectionAttempts: 5,
+      reconnectionDelay: 2000,
     });
 
     socket.on('connect', () => setIsConnected(true));
@@ -34,21 +36,21 @@ export function useSocket() {
     };
   }, [isAuthenticated, token]);
 
-  const joinChannel = (channelId: string) => {
+  const joinChannel = useCallback((channelId: string) => {
     socketRef.current?.emit('channel:join', { channelId });
-  };
+  }, []);
 
-  const leaveChannel = (channelId: string) => {
+  const leaveChannel = useCallback((channelId: string) => {
     socketRef.current?.emit('channel:leave', { channelId });
-  };
+  }, []);
 
-  const startTyping = (channelId: string) => {
+  const startTyping = useCallback((channelId: string) => {
     socketRef.current?.emit('typing:start', { channelId });
-  };
+  }, []);
 
-  const stopTyping = (channelId: string) => {
+  const stopTyping = useCallback((channelId: string) => {
     socketRef.current?.emit('typing:stop', { channelId });
-  };
+  }, []);
 
   return {
     socket: socketRef.current,

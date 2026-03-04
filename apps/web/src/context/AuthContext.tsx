@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import { createContext, useContext, useEffect, useRef, useState, ReactNode } from 'react';
 import Keycloak from 'keycloak-js';
 import { api } from '../services/api';
 
@@ -37,7 +37,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     keycloak: null,
   });
 
+  const initialized = useRef(false);
+
   useEffect(() => {
+    // Prevent double-init from React StrictMode
+    if (initialized.current) return;
+    initialized.current = true;
+
     const kc = new Keycloak({
       url: import.meta.env.VITE_KEYCLOAK_URL || 'http://localhost:8082',
       realm: 'team-hub',

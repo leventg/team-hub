@@ -29,7 +29,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
         jwksUri,
       }),
       issuer,
-      audience,
+      ...(audience ? { audience } : {}),
       algorithms: ['RS256'],
     });
   }

@@ -30,7 +30,8 @@ export function useMessages(channelId: string | null) {
     try {
       const res = await api.get<Message[]>(`/messages/channel/${channelId}?size=50`);
       // API returns newest first, reverse for chat display
-      setMessages((res.data as any)?.items ? (res.data as any).items.reverse() : []);
+      const items = Array.isArray(res.data) ? res.data : (res.data as any)?.items || [];
+      setMessages([...items].reverse());
     } finally {
       setIsLoading(false);
     }
@@ -42,7 +43,8 @@ export function useMessages(channelId: string | null) {
     joinChannel(channelId);
     fetchMessages();
     return () => leaveChannel(channelId);
-  }, [channelId, fetchMessages, joinChannel, leaveChannel]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [channelId]);
 
   // Listen for real-time messages
   useEffect(() => {

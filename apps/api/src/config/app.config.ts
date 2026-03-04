@@ -21,7 +21,7 @@ export default () => ({
   jwt: {
     jwksUri: process.env.JWKS_URI || 'http://localhost:8080/realms/team-hub/protocol/openid-connect/certs',
     issuer: process.env.JWT_ISSUER || 'http://localhost:8080/realms/team-hub',
-    audience: process.env.JWT_AUDIENCE || 'account',
+    audience: process.env.JWT_AUDIENCE || '',
   },
   cors: {
     origin: process.env.CORS_ORIGIN || 'http://localhost:3000',

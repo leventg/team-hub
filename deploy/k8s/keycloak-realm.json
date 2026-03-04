@@ -50,7 +50,7 @@
         {
           "type": "password",
           "value": "changeme",
-          "temporary": true
+          "temporary": false
         }
       ],
       "realmRoles": ["admin"]
@@ -65,7 +65,7 @@
         {
           "type": "password",
           "value": "changeme",
-          "temporary": true
+          "temporary": false
         }
       ],
       "realmRoles": ["junior"]

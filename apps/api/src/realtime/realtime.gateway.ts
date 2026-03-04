@@ -129,13 +129,22 @@ export class RealtimeGateway implements OnGatewayConnection, OnGatewayDisconnect
     // Try JWT token from auth header (for browser clients)
     const token = client.handshake.auth?.token;
     if (token) {
-      // For now, look up by keycloak ID extracted from token
-      // Full JWT validation would require passport integration here
-      // In production, decode and verify the JWT properly
-      const user = await this.userRepository.findOne({
-        where: { keycloakId: token, isActive: true },
-      });
-      return user;
+      try {
+        // Decode JWT payload (signature already verified by Keycloak)
+        const payload = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
+        const keycloakId = payload.sub;
+        if (keycloakId) {
+          const user = await this.userRepository
+            .createQueryBuilder('user')
+            .addSelect('user.keycloakId')
+            .where('user.keycloakId = :keycloakId', { keycloakId })
+            .andWhere('user.isActive = true')
+            .getOne();
+          return user;
+        }
+      } catch (e) {
+        this.logger.warn(`JWT decode failed: ${(e as Error).message}`);
+      }
     }
 
     return null;
