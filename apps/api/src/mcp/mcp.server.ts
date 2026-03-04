@@ -21,17 +21,17 @@ export class McpServerProvider implements OnModuleInit {
     this.logger.log('MCP Server provider initialized');
   }
 
-  createServer(): McpServer {
+  createServer(userId: string): McpServer {
     const server = new McpServer({
       name: 'team-hub',
       version: '0.1.0',
     });
 
-    this.registerTools(server);
+    this.registerTools(server, userId);
     return server;
   }
 
-  private registerTools(server: McpServer): void {
+  private registerTools(server: McpServer, userId: string): void {
     // ── send_message ──
     server.registerTool(
       'send_message',
@@ -43,8 +43,7 @@ export class McpServerProvider implements OnModuleInit {
           parentId: z.string().optional().describe('Parent message ID for thread replies'),
         },
       },
-      async ({ channel, content, parentId }, extra) => {
-        const userId = this.extractUserId(extra);
+      async ({ channel, content, parentId }) => {
         const ch = await this.channelsService.findByName(channel);
         const message = await this.messagesService.create(
           { channelId: ch.id, content, parentId },
@@ -115,8 +114,7 @@ export class McpServerProvider implements OnModuleInit {
           description: z.string().describe('Detailed description of the decision'),
         },
       },
-      async ({ channel, title, description }, extra) => {
-        const userId = this.extractUserId(extra);
+      async ({ channel, title, description }) => {
         const ch = await this.channelsService.findByName(channel);
         const decision = await this.decisionsService.create(
           { title, description, channelId: ch.id },
@@ -149,8 +147,7 @@ export class McpServerProvider implements OnModuleInit {
           comment: z.string().optional().describe('Optional comment with the vote'),
         },
       },
-      async ({ decisionId, value, comment }, extra) => {
-        const userId = this.extractUserId(extra);
+      async ({ decisionId, value, comment }) => {
         const vote = await this.decisionsService.vote(
           { decisionId, value: value as any, comment },
           userId,
@@ -210,8 +207,7 @@ export class McpServerProvider implements OnModuleInit {
           assigneeId: z.string().optional().describe('Assignee user ID'),
         },
       },
-      async ({ title, description, priority, assigneeId }, extra) => {
-        const userId = this.extractUserId(extra);
+      async ({ title, description, priority, assigneeId }) => {
         const task = await this.tasksService.create(
           { title, description, priority: priority as any, assigneeId },
           userId,
@@ -251,8 +247,7 @@ export class McpServerProvider implements OnModuleInit {
             .describe('New priority'),
         },
       },
-      async ({ taskId, status, assigneeId, priority }, extra) => {
-        const userId = this.extractUserId(extra);
+      async ({ taskId, status, assigneeId, priority }) => {
         const task = await this.tasksService.update(
           taskId,
           { status: status as any, assigneeId, priority: priority as any },
@@ -311,8 +306,4 @@ export class McpServerProvider implements OnModuleInit {
     this.logger.log('8 MCP tools registered');
   }
 
-  private extractUserId(extra: any): string {
-    // The user ID is set by the MCP controller after API key validation
-    return extra?.authInfo?.userId || 'unknown';
-  }
 }

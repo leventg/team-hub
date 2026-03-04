@@ -73,11 +73,8 @@ export class McpController {
         }
       };
 
-      // Create a fresh MCP server for this session
-      const server = this.mcpServerProvider.createServer();
-
-      // Inject auth info so tools can identify the caller
-      (transport as any)._authInfo = { userId };
+      // Create a fresh MCP server for this session, with userId bound to tool handlers
+      const server = this.mcpServerProvider.createServer(userId);
 
       await server.connect(transport);
       await transport.handleRequest(req, res, req.body);
