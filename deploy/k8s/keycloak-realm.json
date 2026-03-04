@@ -29,13 +29,13 @@
       "publicClient": true,
       "standardFlowEnabled": true,
       "directAccessGrantsEnabled": true,
-      "rootUrl": "http://localhost:3000",
+      "rootUrl": "http://localhost:3002",
       "baseUrl": "/",
       "redirectUris": [
-        "http://localhost:3000/*"
+        "http://localhost:3002/*"
       ],
       "webOrigins": [
-        "http://localhost:3000"
+        "http://localhost:3002"
       ]
     }
   ],

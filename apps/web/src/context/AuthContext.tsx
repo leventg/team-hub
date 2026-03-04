@@ -39,7 +39,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const kc = new Keycloak({
-      url: 'http://localhost:8080',
+      url: import.meta.env.VITE_KEYCLOAK_URL || 'http://localhost:8082',
       realm: 'team-hub',
       clientId: 'team-hub-web',
     });
