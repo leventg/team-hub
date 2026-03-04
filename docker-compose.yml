@@ -7,7 +7,7 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD:?Set DB_PASSWORD in .env}
       POSTGRES_DB: ${DB_NAME:-team_hub}
     ports:
-      - "5432:5432"
+      - "${DB_PORT:-5433}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./migrations/V001__initial_schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
@@ -21,7 +21,7 @@ services:
     image: redis:7-alpine
     container_name: team-hub-redis
     ports:
-      - "6379:6379"
+      - "${REDIS_PORT:-6380}:6379"
     volumes:
       - redis_data:/data
     healthcheck:
@@ -39,7 +39,7 @@ services:
       KEYCLOAK_ADMIN: ${KC_ADMIN:-admin}
       KEYCLOAK_ADMIN_PASSWORD: ${KC_ADMIN_PASSWORD:?Set KC_ADMIN_PASSWORD in .env}
     ports:
-      - "8080:8080"
+      - "${KC_PORT:-8081}:8080"
     volumes:
       - ./deploy/k8s/keycloak-realm.json:/opt/keycloak/data/import/team-hub-realm.json
     healthcheck:

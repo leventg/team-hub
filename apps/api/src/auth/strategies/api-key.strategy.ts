@@ -16,9 +16,12 @@ export class ApiKeyStrategy {
   async validate(apiKey: string): Promise<User | null> {
     const hash = createHash('sha256').update(apiKey).digest('hex');
 
-    const user = await this.userRepository.findOne({
-      where: { apiKeyHash: hash, isActive: true },
-    });
+    const user = await this.userRepository
+      .createQueryBuilder('user')
+      .addSelect('user.apiKeyHash')
+      .where('user.apiKeyHash = :hash', { hash })
+      .andWhere('user.isActive = true')
+      .getOne();
 
     if (!user) {
       this.logger.warn('Invalid API key attempt');

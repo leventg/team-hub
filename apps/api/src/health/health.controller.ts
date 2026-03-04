@@ -1,10 +1,12 @@
 import { Controller, Get } from '@nestjs/common';
 import { DataSource } from 'typeorm';
+import { Public } from '../auth/decorators/public.decorator';
 
 @Controller()
 export class HealthController {
   constructor(private readonly dataSource: DataSource) {}
 
+  @Public()
   @Get('/health')
   async check() {
     const dbHealthy = this.dataSource.isInitialized;

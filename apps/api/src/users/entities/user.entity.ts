@@ -22,10 +22,10 @@ export class User extends BaseEntity {
   @Column({ type: 'varchar', length: 255, unique: true, nullable: true })
   email: string | null;
 
-  @Column({ name: 'keycloak_id', type: 'varchar', length: 255, unique: true, nullable: true })
+  @Column({ name: 'keycloak_id', type: 'varchar', length: 255, unique: true, nullable: true, select: false })
   keycloakId: string | null;
 
-  @Column({ name: 'api_key_hash', type: 'varchar', length: 255, nullable: true })
+  @Column({ name: 'api_key_hash', type: 'varchar', length: 255, nullable: true, select: false })
   apiKeyHash: string | null;
 
   @Column({ name: 'user_type', type: 'enum', enum: UserType })

@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { join } from 'path';
 import appConfig from './config/app.config';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
@@ -17,6 +18,10 @@ import { HealthModule } from './health/health.module';
     ConfigModule.forRoot({
       isGlobal: true,
       load: [appConfig],
+      envFilePath: [
+        join(__dirname, '..', '..', '..', '.env'),
+        '.env',
+      ],
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],

@@ -57,7 +57,7 @@ export class DecisionsService {
   }
 
   async vote(dto: CastVoteDto, voterId: string): Promise<Vote> {
-    const decision = await this.findById(dto.decisionId);
+    const decision = await this.findById(dto.decisionId!);
 
     if (decision.status !== DecisionStatus.PROPOSED) {
       throw new BusinessException(

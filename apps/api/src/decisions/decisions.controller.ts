@@ -32,8 +32,7 @@ export class DecisionsController {
     @Body() dto: CastVoteDto,
     @CurrentUser() user: User,
   ) {
-    dto.decisionId = decisionId;
-    return this.decisionsService.vote(dto, user.id);
+    return this.decisionsService.vote({ ...dto, decisionId }, user.id);
   }
 
   @Patch(':id/resolve')

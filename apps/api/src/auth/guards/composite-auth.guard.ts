@@ -50,9 +50,12 @@ export class CompositeAuthGuard implements CanActivate {
         // Resolve JWT user to our User entity
         const jwtUser = (request as any).user;
         if (jwtUser?.keycloakId) {
-          const user = await this.userRepository.findOne({
-            where: { keycloakId: jwtUser.keycloakId, isActive: true },
-          });
+          const user = await this.userRepository
+            .createQueryBuilder('user')
+            .addSelect('user.keycloakId')
+            .where('user.keycloakId = :keycloakId', { keycloakId: jwtUser.keycloakId })
+            .andWhere('user.isActive = true')
+            .getOne();
           if (user) {
             (request as any).user = user;
             await this.userRepository.update(user.id, { lastSeenAt: new Date() });

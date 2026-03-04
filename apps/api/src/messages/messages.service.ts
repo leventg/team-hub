@@ -51,14 +51,14 @@ export class MessagesService {
     const qb = this.messageRepository
       .createQueryBuilder('message')
       .leftJoinAndSelect('message.author', 'author')
-      .where('message.channel_id = :channelId', { channelId })
-      .andWhere('message.deleted_at IS NULL');
+      .where('message.channelId = :channelId', { channelId })
+      .andWhere('message.deletedAt IS NULL');
 
     // Only top-level messages by default (not thread replies)
     if (query.parentId) {
-      qb.andWhere('message.parent_id = :parentId', { parentId: query.parentId });
+      qb.andWhere('message.parentId = :parentId', { parentId: query.parentId });
     } else {
-      qb.andWhere('message.parent_id IS NULL');
+      qb.andWhere('message.parentId IS NULL');
     }
 
     // Full-text search
@@ -72,7 +72,7 @@ export class MessagesService {
     const totalPages = Math.ceil(totalItems / query.size);
 
     const items = await qb
-      .orderBy('message.created_at', 'DESC')
+      .orderBy('message.createdAt', 'DESC')
       .skip((query.page - 1) * query.size)
       .take(query.size)
       .getMany();
